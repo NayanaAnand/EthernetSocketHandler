@@ -298,7 +298,7 @@ int EthernetSocketHandler_i::serviceFunction()
         	                    if(ntohs(loc_ethhd_ptr->h_proto) == ETH_P_IP)
         	                    {
         	                        loc_iphd_ptr = (struct iphdr *)(loc_buffer + sizeof(struct ethhdr));
-        	                        printf("%d\n", loc_iphd_ptr->protocol);
+        	                        //printf("%d\n", loc_iphd_ptr->protocol);
         	                        switch(loc_iphd_ptr->protocol)
         	                        {
         	                            case 1:
