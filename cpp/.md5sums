@@ -1,0 +1,10 @@
+5671c8bbf141bdac7e0f952e82d3e6d4  EthernetSocketHandler_base.h
+665e0b31fb8aa55f460136d414254de1  main.cpp
+297d746b19fcf79bf01e5d7c14067889  EthernetSocketHandler.h
+8bfcd22353c3a57fee561ad86ee2a56b  reconf
+842b82dae6a65e0c8c240488aad7fcb0  EthernetSocketHandler.cpp
+4467217f83fef97363280e839083f770  EthernetSocketHandler_base.cpp
+59b1a53ff5789eaf3c739d4e1a990dfc  configure.ac
+42243df771daed396c4992ea2ca23ecd  Makefile.am
+b7554eca1f94cf2b04021dd14549fef3  Makefile.am.ide
+2b2faa5cfc83438427491f4be5d6ee59  build.sh
