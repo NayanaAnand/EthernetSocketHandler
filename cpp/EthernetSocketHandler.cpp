@@ -317,7 +317,7 @@ int EthernetSocketHandler_i::serviceFunction()
         	        close(loc_sd);
 
 
-	return NULL;
+	return 0;
 
 
 }

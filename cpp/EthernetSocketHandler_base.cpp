@@ -14,7 +14,7 @@ EthernetSocketHandler_base::EthernetSocketHandler_base(const char *uuid, const c
     Component(uuid, label),
     ThreadedComponent()
 {
-    setThreadName(label);
+    //setThreadName(label);
 
     loadProperties();
 }
