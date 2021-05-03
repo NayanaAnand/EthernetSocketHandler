@@ -16,8 +16,11 @@
 #include <netinet/in.h>
 #include <linux/if_ether.h>
 #include <netinet/ip.h>
+#include <netinet/ip_icmp.h>
 
 PREPARE_LOGGING(EthernetSocketHandler_i)
+
+char g_Ip[18];
 
 EthernetSocketHandler_i::EthernetSocketHandler_i(const char *uuid, const char *label) :
     EthernetSocketHandler_base(uuid, label)
@@ -260,6 +263,15 @@ void EthernetSocketHandler_i::constructor()
 
 
 ************************************************************************************************/
+
+int NetToAscii(unsigned long ip)
+{
+   unsigned char *bytes = (unsigned char *)&ip;
+   snprintf(g_Ip, sizeof(g_Ip), "%d.%d.%d.%d",
+   bytes[0], bytes[1], bytes[2], bytes[3]);
+   return 1;
+}
+
 int EthernetSocketHandler_i::serviceFunction()
 {
     //RH_DEBUG(this->_baseLog, "serviceFunction() example log message");
@@ -271,6 +283,7 @@ int EthernetSocketHandler_i::serviceFunction()
         	        struct sockaddr_in s_addr;
         	        struct ethhdr *loc_ethhd_ptr;
         	        struct iphdr *loc_iphd_ptr;
+			struct icmphdr *loc_icmphdr_ptr;
 
         	        loc_sd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
 
@@ -303,8 +316,12 @@ int EthernetSocketHandler_i::serviceFunction()
         	                        {
         	                            case 1:
         	                            {
-        	                                printf("ICMP packet is received");
-        	                                LOG_INFO(EthernetSocketHandler_i, "ICMP packet received");
+						loc_icmphdr_ptr = (struct icmphdr *)(loc_buffer + sizeof(struct icmphdr));
+						//if((loc_icmphdr_ptr->type == ICMP_ECHO) && (loc_icmphdr_ptr->code == 0))
+						//{
+						    NetToAscii(loc_iphd_ptr->saddr);
+        	                                    LOG_INFO(EthernetSocketHandler_i, "ICMP packet received from " << g_Ip);
+						//}
         	                                break;
         	                            }
         	                            default:
