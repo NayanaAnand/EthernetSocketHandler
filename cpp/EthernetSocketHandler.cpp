@@ -17,7 +17,9 @@
 #include <linux/if_ether.h>
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
+#include <linux/udp.h>
 
+#define PORT 8080
 PREPARE_LOGGING(EthernetSocketHandler_i)
 
 char g_Ip[18];
@@ -284,6 +286,7 @@ int EthernetSocketHandler_i::serviceFunction()
         	        struct ethhdr *loc_ethhd_ptr;
         	        struct iphdr *loc_iphd_ptr;
 			struct icmphdr *loc_icmphdr_ptr;
+			struct udphdr *loc_udphdr_ptr;
 
         	        loc_sd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
 
@@ -324,6 +327,27 @@ int EthernetSocketHandler_i::serviceFunction()
 						//}
         	                                break;
         	                            }
+					    case 17:
+					    {
+						loc_udphdr_ptr = (struct udphdr *)(loc_buffer + sizeof(struct udphdr));
+						if(loc_udphdr_ptr->source == PORT)
+						{
+						loc_buffer[loc_buff_len] = '\0';
+						LOG_INFO(EthernetSocketHandler_i, "Data received : " << loc_buffer);
+						memset(&loc_buffer, 0, sizeof(loc_buffer));
+						strcpy(loc_buffer, "SCA compliance - Data communication");
+						s_addr.sin_family = AF_INET;
+    						s_addr.sin_port = htons(PORT);
+    						s_addr.sin_addr.s_addr = INADDR_ANY;
+						loc_buff_len = sendto(loc_sd, (const char *)loc_buffer, strlen(loc_buffer), MSG_CONFIRM, (const struct sockaddr*)&s_addr, sizeof(s_addr));
+					    	
+						if(loc_buff_len < 0)
+						{
+							LOG_INFO(EthernetSocketHandler_i, "Data sent back successfully");
+						}
+						}
+						break;
+					    }
         	                            default:
         	                                break;
         	                         }
